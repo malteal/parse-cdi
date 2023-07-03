@@ -11,10 +11,6 @@ integer = digits.parsecmap(int)
 comma = string(",")
 
 
-def spaced(p):
-  return spaces() >> p << spaces()
-
-
 def floating():
   neg = string("-")
   start = digits
@@ -27,15 +23,6 @@ def floating():
     ^ start.parsecmap(lambda x: [x])
 
   return q.parsecmap("".join).parsecmap(float)
-
-
-def choose(p, q):
-  def t(x):
-    return True , x
-  def f(x):
-    return False , x
-
-  return (p.parsecmap(f) ^ q.parsecmap(t))
 
 
 metaline = spaces() >> string("meta") >> line
@@ -52,9 +39,9 @@ ptbinning = \
   joint \
   ( spaces()
     >> string("bin(")
-    >> integer
+    >> floating()
     << string("<pt<")
-  , integer << line
+  , floating() << line
   )
 
 
