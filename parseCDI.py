@@ -30,7 +30,6 @@ metaline = spaces() >> string("meta") >> line
 begin = \
   ( string("Analysis")
     >> line
-    >> spaces()
     >> many(metaline)
   )
 
