@@ -45,10 +45,11 @@ ptbinning = \
 
 
 cv = \
+  joint \
   ( spaces()
     >> string("central_value(")
-    >> (floating() + (comma >> floating()))
-    << string(")")
+    >> floating()
+  , comma >> floating() << string(")")
   )
 
 
@@ -58,8 +59,7 @@ sys = \
     >> string("sys(")
     >> tostring(many(none_of(",")))
     << comma
-  , floating()
-    << string("%)")
+  , floating() << string("%)")
   )
 
 
