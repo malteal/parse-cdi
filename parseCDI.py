@@ -92,24 +92,13 @@ def tohists(xs):
   return centralvalue, allvars
 
 
+def distmap(f, d):
+  return { k : f(x) for k , x in d.items() }
+
+
 import matplotlib.figure as figure
 import numpy
-from cpplot.cpplot import comparehist, zeroerr
-
-
-def plotvars(binning, nominal, variations):
-  labels, vars = zip(*list(variations.items()))
-  labels = list(labels)
-
-  nominal = numpy.array(nominal)
-  vars = list(map(lambda h: (1 + numpy.array(h))*nominal, vars))
-
-  nominal = zeroerr(nominal)
-  vars = list(map(zeroerr, vars))
-
-  binning = numpy.array(binning)
-  
-  return comparehist([nominal] + vars[:5], binning, ["nominal"] + labels, xlabel="", ylabel="")
+from cpplot.cpplot import comparehist, zeroerr, stderr
 
 
 if __name__ == "__main__":
@@ -119,7 +108,40 @@ if __name__ == "__main__":
 
   cdi = sffile(s, 0).value
   nominal, vars = tohists(cdi)
-  bins = binning(cdi)
+  bins = numpy.array(binning(cdi))
 
-  fig = plotvars(bins, nominal, vars)
+  def app(h):
+    return (1 + numpy.array(h))*nominal
+
+  nominal = numpy.array(nominal)
+
+  dvars = distmap(app, vars)
+
+  plotvarnames = \
+    [ "Flavor_Composition"
+    , "Flavor_Response"
+    , "EtaIntercalibration_Modelling"
+    , "FT_EFF_ttbar_PowHW7"
+    , "ttbar_mc_rad"
+    , "Pileup_OffsetMu"
+    , "Pileup_RhoTopology"
+    , "JER_DataVsMC_MC16"
+    , "JER_EffectiveNP_1"
+    ]
+
+  vars = [ dvars[k] for k in dvars ]
+  statvars = [ dvars[k] for k in dvars if "stat" in k ]
+  plotvars = [ dvars[k] for k in plotvarnames ]
+  systvars = \
+    [ dvars[k] for k in dvars
+        if "stat" not in k
+          and "singletop" not in k
+          and "PDF" not in k
+    ]
+
+  withstatuncerts = stderr(nominal, statvars)
+  withsysuncerts = stderr(nominal, systvars)
+  otcalibuncerts = stderr(nominal, plotvars)
+
+  fig = comparehist([withstatuncerts, withsysuncerts, otcalibuncerts], numpy.array(bins), ["stats" , "systs" , "assessed"], xlabel="", ylabel="")
   fig.savefig("test.pdf")
