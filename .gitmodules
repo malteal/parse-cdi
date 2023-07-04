@@ -1,0 +1,3 @@
+[submodule "cpplot"]
+	path = cpplot
+	url = git@github.com:cspollard/cpplot.git

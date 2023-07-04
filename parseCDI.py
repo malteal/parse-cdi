@@ -1,5 +1,6 @@
 from parsec import *
 
+
 def tostring(p):
   return p.parsecmap("".join)
 
@@ -59,7 +60,7 @@ sys = \
     >> string("sys(")
     >> tostring(many(none_of(",")))
     << comma
-  , floating() << string("%)")
+  , floating().parsecmap(lambda x : x * 0.01) << string("%)")
   )
 
 
@@ -67,11 +68,48 @@ sfbin = \
   joint \
   ( ptbinning << spaces() << string("{") << spaces()
   , cv
-  , spaces() >> many(sys) << spaces() << string("}")
+  , (spaces() >> many(sys) << spaces() << string("}")).parsecmap(dict)
   )
   
 
 sffile = begin >> many(sfbin)
+
+
+def binning(xs):
+  return list(map(lambda x : x[0][0], xs)) + [ xs[-1][0][1] ]
+
+
+# this is bad.
+# it assumes all keys are there properly in all bins...
+def tohists(xs):
+  nmax = len(xs)
+  allkeys = xs[0][2].keys()
+
+  centralvalue = [ x[1][0] for x in xs ]
+  allvars = { k : [ xs[i][2][k] for i in range(nmax) ] for k in allkeys }
+
+
+  return centralvalue, allvars
+
+
+import matplotlib.figure as figure
+import numpy
+from cpplot.cpplot import comparehist, zeroerr
+
+
+def plotvars(binning, nominal, variations):
+  labels, vars = zip(*list(variations.items()))
+  labels = list(labels)
+
+  nominal = numpy.array(nominal)
+  vars = list(map(lambda h: (1 + numpy.array(h))*nominal, vars))
+
+  nominal = zeroerr(nominal)
+  vars = list(map(zeroerr, vars))
+
+  binning = numpy.array(binning)
+  
+  return comparehist([nominal] + vars[:5], binning, ["nominal"] + labels, xlabel="", ylabel="")
 
 
 if __name__ == "__main__":
@@ -79,4 +117,9 @@ if __name__ == "__main__":
   with open(argv[1]) as reader:
     s = reader.read()
 
-  print(sffile(s, 0))
+  cdi = sffile(s, 0).value
+  nominal, vars = tohists(cdi)
+  bins = binning(cdi)
+
+  fig = plotvars(bins, nominal, vars)
+  fig.savefig("test.pdf")
