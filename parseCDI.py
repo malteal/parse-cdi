@@ -123,10 +123,10 @@ if __name__ == "__main__":
     , "EtaIntercalibration_Modelling"
     , "FT_EFF_ttbar_PowHW7"
     , "ttbar_mc_rad"
-    , "Pileup_OffsetMu"
-    , "Pileup_RhoTopology"
-    , "JER_DataVsMC_MC16"
-    , "JER_EffectiveNP_1"
+    # , "Pileup_OffsetMu"
+    # , "Pileup_RhoTopology"
+    # , "JER_DataVsMC_MC16"
+    # , "JER_EffectiveNP_1"
     ]
 
   vars = [ dvars[k] for k in dvars ]
@@ -143,5 +143,14 @@ if __name__ == "__main__":
   withsysuncerts = stderr(nominal, systvars)
   otcalibuncerts = stderr(nominal, plotvars)
 
-  fig = comparehist([withstatuncerts, withsysuncerts, otcalibuncerts], numpy.array(bins), ["stats" , "systs" , "assessed"], xlabel="", ylabel="")
+  fig = \
+    comparehist \
+    ( [withstatuncerts, withsysuncerts, otcalibuncerts]
+    , numpy.array(bins)
+    , ["stat uncerts" , "syst uncerts" , "currently assessed"]
+    , xlabel="jet $p_T$ / GeV"
+    , ylabel="efficiency scale factor"
+    )
+
+  fig.legend()
   fig.savefig("test.pdf")
