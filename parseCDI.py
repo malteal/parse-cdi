@@ -104,7 +104,7 @@ from cpplot.cpplot import comparehist, zeroerr, stderr
 if __name__ == "__main__":
   from sys import argv
 
-  wp = int(argv[1]
+  wp = int(argv[1])
   fname =  \
     "btag_ttbarPDF_mc16ade_v1.0_21-2-93_DL1r_AntiKt4EMPFlowJets_BTagging201903_%s.txt" \
     % argv[1]
@@ -168,4 +168,5 @@ if __name__ == "__main__":
   plt = fig.axes[0]
   plt.legend()
   plt.set_xscale("log")
+  fig.suptitle("%2d%% OP" % wp)
   fig.savefig("test.pdf")
