@@ -103,7 +103,13 @@ from cpplot.cpplot import comparehist, zeroerr, stderr
 
 if __name__ == "__main__":
   from sys import argv
-  with open(argv[1]) as reader:
+
+  wp = int(argv[1]
+  fname =  \
+    "btag_ttbarPDF_mc16ade_v1.0_21-2-93_DL1r_AntiKt4EMPFlowJets_BTagging201903_%s.txt" \
+    % argv[1]
+
+  with open(fname) as reader:
     s = reader.read()
 
   cdi = sffile(s, 0).value
@@ -123,10 +129,10 @@ if __name__ == "__main__":
     , "EtaIntercalibration_Modelling"
     , "FT_EFF_ttbar_PowHW7"
     , "ttbar_mc_rad"
-    # , "Pileup_OffsetMu"
-    # , "Pileup_RhoTopology"
-    # , "JER_DataVsMC_MC16"
-    # , "JER_EffectiveNP_1"
+    , "Pileup_OffsetMu"
+    , "Pileup_RhoTopology"
+    , "JER_DataVsMC_MC16"
+    , "JER_EffectiveNP_1"
     ]
 
   vars = [ dvars[k] for k in dvars ]
@@ -137,20 +143,29 @@ if __name__ == "__main__":
         if "stat" not in k
           and "singletop" not in k
           and "PDF" not in k
+          and "Light" not in k
     ]
 
+  alluncerts = stderr(nominal, vars)
   withstatuncerts = stderr(nominal, statvars)
   withsysuncerts = stderr(nominal, systvars)
   otcalibuncerts = stderr(nominal, plotvars)
 
+  from maltesfs import sfs
+
+  otsfs = numpy.array(sfs[wp][0]) , numpy.array(sfs[wp][1])
+
   fig = \
     comparehist \
-    ( [withstatuncerts, withsysuncerts, otcalibuncerts]
+    ( [ alluncerts, otsfs ]
     , numpy.array(bins)
-    , ["stat uncerts" , "syst uncerts" , "currently assessed"]
+    , [ "standard calib" , "MALTE's AWESOME CALIB\nDON'T NEED NO UNCERTAINTIES" ]
     , xlabel="jet $p_T$ / GeV"
     , ylabel="efficiency scale factor"
+    , alphas=[0.7, 0.8]
     )
 
-  fig.legend()
+  plt = fig.axes[0]
+  plt.legend()
+  plt.set_xscale("log")
   fig.savefig("test.pdf")
