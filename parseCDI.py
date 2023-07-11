@@ -180,5 +180,6 @@ if __name__ == "__main__":
   plt = fig.axes[0]
   plt.legend()
   plt.set_xscale("log")
+  plt.set_ylim(0.75, 1.05)
   fig.suptitle("%2d%% OP" % wp)
   fig.savefig("test.pdf")
