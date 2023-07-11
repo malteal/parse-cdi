@@ -18,3 +18,16 @@ sfs = \
     )
   }
 
+import numpy
+
+csvsfs = \
+  { k :
+    numpy.loadtxt \
+    ( "WP_%d.csv" % k
+    , delimiter=","
+    , usecols=(1, 2, 3, 4)
+    , skiprows=1
+    )
+
+    for k in [ 85 , 77 , 70 , 60 ]
+  }

@@ -98,7 +98,7 @@ def distmap(f, d):
 
 import matplotlib.figure as figure
 import numpy
-from cpplot.cpplot import comparehist, zeroerr, stderr
+from cpplot.cpplot import compare, comparehist, zeroerr, stderr
 
 
 if __name__ == "__main__":
@@ -151,18 +151,30 @@ if __name__ == "__main__":
   withsysuncerts = stderr(nominal, systvars)
   otcalibuncerts = stderr(nominal, plotvars)
 
-  from maltesfs import sfs
+  from maltesfs import csvsfs
 
-  otsfs = numpy.array(sfs[wp][0]) , numpy.array(sfs[wp][1])
+  otsfs = csvsfs[wp].T
+  xs = otsfs[0]
+  xerrs = numpy.stack([otsfs[1]]*2)
+  ys = otsfs[2]
+  yerrs = numpy.stack([otsfs[3]]*2)
+
+  bins = numpy.array(bins)
+  bincenters = (bins[1:] + bins[:-1]) / 2.0
+  binerrs = (bins[1:] - bins[:-1]) / 2.0
+
 
   fig = \
-    comparehist \
-    ( [ alluncerts, otsfs ]
-    , numpy.array(bins)
-    , [ "standard calib" , "MALTE's AWESOME CALIB\nDON'T NEED NO UNCERTAINTIES" ]
+    compare \
+    ( [ (xs , xerrs) , ( bincenters , binerrs ) ]
+    , [ (ys , yerrs) , alluncerts ]
+    , [ "Malte airlines ✈️" , "standard calib" ]
     , xlabel="jet $p_T$ / GeV"
     , ylabel="efficiency scale factor"
-    , alphas=[0.7, 0.8]
+    , alphas=[ 1.0 , 1.0 ]
+    , errorfills=[ True, False ]
+    , linewidths=[ 2, 0 ]
+    , colors=[ "orange" , "black" ]
     )
 
   plt = fig.axes[0]
