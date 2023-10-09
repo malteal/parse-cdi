@@ -1,4 +1,8 @@
 from parsec import *
+import numpy
+from cpplot.cpplot import compare, stderr
+from matplotlib import figure
+
 
 
 def tostring(p):
@@ -96,11 +100,6 @@ def distmap(f, d):
   return { k : f(x) for k , x in d.items() }
 
 
-import matplotlib.figure as figure
-import numpy
-from cpplot.cpplot import compare, comparehist, zeroerr, stderr
-
-
 if __name__ == "__main__":
   from sys import argv
 
@@ -164,22 +163,26 @@ if __name__ == "__main__":
   binerrs = (bins[1:] - bins[:-1]) / 2.0
 
 
-  fig = \
-    compare \
-    ( [ (xs , xerrs) , ( bincenters , binerrs ) ]
+  fig = figure.Figure((6, 6))
+  plt = fig.add_subplot(111)
+
+ 
+  compare \
+    ( plt
+    , [ (xs , xerrs) , ( bincenters , binerrs ) ]
     , [ (ys , yerrs) , alluncerts ]
     , [ "Malte airlines ✈️" , "standard calib" ]
-    , xlabel="jet $p_T$ / GeV"
-    , ylabel="efficiency scale factor"
+    , "jet $p_T$ / GeV"
+    , "efficiency scale factor"
     , alphas=[ 1.0 , 1.0 ]
     , errorfills=[ True, False ]
     , linewidths=[ 2, 0 ]
     , colors=[ "orange" , "black" ]
     )
 
-  plt = fig.axes[0]
   plt.legend()
   plt.set_xscale("log")
   plt.set_ylim(0.75, 1.05)
+
   fig.suptitle("%2d%% OP" % wp)
   fig.savefig("test.pdf")
