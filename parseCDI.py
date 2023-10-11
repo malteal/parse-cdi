@@ -169,8 +169,8 @@ if __name__ == "__main__":
  
   compare \
     ( plt
-    , [ (xs , xerrs) , ( bincenters , binerrs ) ]
-    , [ (ys , yerrs) , alluncerts ]
+    , [ ( xs , xerrs ) , ( bincenters , binerrs ) ]
+    , [ ( ys , yerrs ) , alluncerts ]
     , [ "Malte airlines ✈️" , "standard calib" ]
     , "jet $p_T$ / GeV"
     , "efficiency scale factor"
