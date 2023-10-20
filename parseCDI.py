@@ -151,12 +151,32 @@ if __name__ == "__main__":
   otcalibuncerts = stderr(nominal, plotvars)
 
   from maltesfs import csvsfs
+  
+  # for whatever reason, numpy removes "-" from recarray key names...
+  uncerts = \
+    [ "Flavor_Compositiondown"
+    , "Pileup_OffsetMudown"
+    , "JER_EffectiveNP_1down"
+    , "Flavor_Responsedown"
+    , "JER_DataVsMC_MC16down"
+    , "EtaIntercalibrationdown"
+    , "Pileup_RhoTopologydown"
+    , "20230622_145054082514_hdamp"
+    , "20230828_144908518131_lights_on_nominal"
+    , "20230831_113912209609_herwig_pythia_MC"
+    , "stats"
+    ]
 
-  otsfs = csvsfs[wp].T
-  xs = otsfs[0]
-  xerrs = numpy.stack([otsfs[1]]*2)
-  ys = otsfs[2]
-  yerrs = numpy.stack([otsfs[3]]*2)
+
+  otsfs = csvsfs[wp]
+  xs = otsfs["bins"]
+  xerrs = numpy.stack([otsfs["width"]]*2)
+  ys = otsfs["center"]
+
+  yuncerts = { k : numpy.sqrt(otsfs[k].T) for k in uncerts }
+  yerrs = numpy.sqrt(numpy.sum([ otsfs[k].T for k in uncerts ], axis=0))
+  yerrs = numpy.stack([yerrs]*2)
+
 
   bins = numpy.array(bins)
   bincenters = (bins[1:] + bins[:-1]) / 2.0
@@ -166,18 +186,41 @@ if __name__ == "__main__":
   fig = figure.Figure((6, 6))
   plt = fig.add_subplot(111)
 
+  xzeros = numpy.zeros_like(xerrs)
+  yzeros = numpy.zeros_like(yerrs)
+  curves = \
+    [ ( ys , yerrs )
+    , ( ys , numpy.stack([yuncerts["stats"]]*2) )
+    , ( ys + yuncerts["20230831_113912209609_herwig_pythia_MC"] , yzeros )
+    , ( ys + yuncerts["20230828_144908518131_lights_on_nominal"] , yzeros )
+    , ( ys + yuncerts["Flavor_Compositiondown"] , yzeros )
+    , ( ys + yuncerts["Pileup_RhoTopologydown"] , yzeros )
+    , ( ys + yuncerts["JER_EffectiveNP_1down"] , yzeros )
+    ]
+
+  curvelabels = \
+    [ "Malte airlines ✈️"
+    , "stat uncertainty"
+    , "parton shower uncertainty"
+    , "light calib uncertainty"
+    , "JES flavor composition"
+    , "JES rho topology"
+    , "JER effective NP 1"
+    ]
+
  
   compare \
     ( plt
-    , [ ( xs , xerrs ) , ( bincenters , binerrs ) ]
-    , [ ( ys , yerrs ) , alluncerts ]
-    , [ "Malte airlines ✈️" , "standard calib" ]
+    , [ ( xs , xzeros ) ] * len(curves) + [ ( bincenters , binerrs ) ]
+    , curves + [ alluncerts ]
+    , curvelabels + [ "standard calib" ]
     , "jet $p_T$ / GeV"
     , "efficiency scale factor"
-    , alphas=[ 1.0 , 1.0 ]
-    , errorfills=[ True, False ]
-    , linewidths=[ 2, 0 ]
-    , colors=[ "orange" , "black" ]
+    , alphas = [0.5] + [ 1.0 ] * len(curves)
+    , errorfills = [ True ] * len(curves) + [ False ]
+    , markers = [ None ] * len(curves) + [ "s" ]
+    , linewidths = [ 2 , 0 ] + [ 2 ] * 5 + [ 0 ]
+    , colors=[ "gray" ] * 2 + [ "blue" , "green" , "red" , "magenta" , "orange" , "black" ]
     )
 
   plt.legend()

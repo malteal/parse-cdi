@@ -22,11 +22,10 @@ import numpy
 
 csvsfs = \
   { k :
-    numpy.loadtxt \
-    ( "WP_%d.csv" % k
+    numpy.genfromtxt \
+    ( "MC_WP_%d_WP.csv" % k
     , delimiter=","
-    , usecols=(1, 2, 3, 4)
-    , skiprows=1
+    , names=True
     )
 
     for k in [ 85 , 77 , 70 , 60 ]
