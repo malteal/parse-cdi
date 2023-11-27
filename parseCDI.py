@@ -230,7 +230,7 @@ if __name__ == "__main__":
   plt.set_xscale("log")
   plt.set_ylim(0.75, 1.05)
   plt.text(60, 0.90, "ATLAS", weight="bold", style="italic", size="large")
-  plt.text(60, 0.885, "Internal Simulation", style="italic", size="large")
+  plt.text(60, 0.885, "Internal", style="italic", size="large")
   plt.text(60, 0.87, "$\\sqrt{s} = 13.6$ TeV", size="large")
   plt.legend(loc="lower center")
 
