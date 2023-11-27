@@ -191,41 +191,48 @@ if __name__ == "__main__":
   curves = \
     [ ( ys , yerrs )
     , ( ys , numpy.stack([yuncerts["stats"]]*2) )
-    , ( ys + yuncerts["20230831_113912209609_herwig_pythia_MC"] , yzeros )
-    , ( ys + yuncerts["20230828_144908518131_lights_on_nominal"] , yzeros )
-    , ( ys + yuncerts["Flavor_Compositiondown"] , yzeros )
-    , ( ys + yuncerts["Pileup_RhoTopologydown"] , yzeros )
-    , ( ys + yuncerts["JER_EffectiveNP_1down"] , yzeros )
+    # , ( ys + yuncerts["20230831_113912209609_herwig_pythia_MC"] , yzeros )
+    # , ( ys + yuncerts["20230828_144908518131_lights_on_nominal"] , yzeros )
+    # , ( ys + yuncerts["Flavor_Compositiondown"] , yzeros )
+    # , ( ys + yuncerts["Pileup_RhoTopologydown"] , yzeros )
+    # , ( ys + yuncerts["JER_EffectiveNP_1down"] , yzeros )
     ]
 
   curvelabels = \
-    [ "Malte airlines ✈️"
+    [ "optimal transport"
     , "stat uncertainty"
-    , "parton shower uncertainty"
-    , "light calib uncertainty"
-    , "JES flavor composition"
-    , "JES rho topology"
-    , "JER effective NP 1"
+    # , "parton shower uncertainty"
+    # , "light calib uncertainty"
+    # , "JES flavor composition"
+    # , "JES rho topology"
+    # , "JER effective NP 1"
     ]
 
+  nextracurves = len(curves)-2
  
   compare \
     ( plt
     , [ ( xs , xzeros ) ] * len(curves) + [ ( bincenters , binerrs ) ]
     , curves + [ alluncerts ]
     , curvelabels + [ "standard calib" ]
-    , "jet $p_T$ / GeV"
+    , "jet $p_T$ [\\mathrm{GeV}]"
     , "efficiency scale factor"
     , alphas = [0.5] + [ 1.0 ] * len(curves)
     , errorfills = [ True ] * len(curves) + [ False ]
     , markers = [ None ] * len(curves) + [ "s" ]
-    , linewidths = [ 2 , 0 ] + [ 2 ] * 5 + [ 0 ]
-    , colors=[ "gray" ] * 2 + [ "blue" , "green" , "red" , "magenta" , "orange" , "black" ]
+    , linewidths = [ 2 , 0 ] + [ 2 ] * nextracurves + [ 0 ]
+    , colors= \
+        [ "red" ] * 2
+      + [ "blue" , "green" , "gray" , "magenta" , "orange" ][:nextracurves]
+      + [ "black" ]
     )
 
-  plt.legend()
   plt.set_xscale("log")
   plt.set_ylim(0.75, 1.05)
+  plt.text(60, 0.90, "ATLAS", weight="bold", style="italic", size="large")
+  plt.text(60, 0.885, "Internal Simulation", style="italic", size="large")
+  plt.text(60, 0.87, "$\\sqrt{s} = 13.6$ TeV", size="large")
+  plt.legend(loc=(60, 0.84))
 
-  fig.suptitle("%2d%% OP" % wp)
-  fig.savefig("test.pdf")
+  # fig.suptitle("%2d%% OP" % wp)
+  fig.savefig("%2dWP.pdf" % wp)
