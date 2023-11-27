@@ -183,7 +183,7 @@ if __name__ == "__main__":
   binerrs = (bins[1:] - bins[:-1]) / 2.0
 
 
-  fig = figure.Figure((6, 6))
+  fig = figure.Figure((4.5, 4.5))
   plt = fig.add_subplot(111)
 
   xzeros = numpy.zeros_like(xerrs)
@@ -215,7 +215,7 @@ if __name__ == "__main__":
     , [ ( xs , xzeros ) ] * len(curves) + [ ( bincenters , binerrs ) ]
     , curves + [ alluncerts ]
     , curvelabels + [ "standard calib" ]
-    , "jet $p_T$ [\\mathrm{GeV}]"
+    , "jet $p_\\mathrm{T}$ [GeV]"
     , "efficiency scale factor"
     , alphas = [0.5] + [ 1.0 ] * len(curves)
     , errorfills = [ True ] * len(curves) + [ False ]
@@ -232,7 +232,7 @@ if __name__ == "__main__":
   plt.text(60, 0.90, "ATLAS", weight="bold", style="italic", size="large")
   plt.text(60, 0.885, "Internal Simulation", style="italic", size="large")
   plt.text(60, 0.87, "$\\sqrt{s} = 13.6$ TeV", size="large")
-  plt.legend(loc=(60, 0.84))
+  plt.legend(loc="lower center")
 
-  # fig.suptitle("%2d%% OP" % wp)
+  fig.tight_layout()
   fig.savefig("%2dWP.pdf" % wp)
