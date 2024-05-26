@@ -96,7 +96,7 @@ def tohists(xs):
   return centralvalue, allvars
 
 
-def distmap(f, d):
+def dictmap(f, d):
   return { k : f(x) for k , x in d.items() }
 
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
   nominal = numpy.array(nominal)
 
-  dvars = distmap(app, vars)
+  dvars = dictmap(app, vars)
 
   plotvarnames = \
     [ "Flavor_Composition"
