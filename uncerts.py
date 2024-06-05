@@ -59,9 +59,20 @@ if __name__ == "__main__":
     , "JER_EffectiveNP_1"
     ]
 
+
   goodvars = { k : dvars[k] for k in dvars if "stat" not in k and "singletop" not in k }
-  systuncert = stderr(nominal, goodvars)[1]
-  fracuncerts = [ stderr(nominal, [goodvars[k]])[1] / systuncert for k in uncerts ]
+  systuncert = stderr(nominal, goodvars.values())[1]
+
+  fracuncerts = { k : stderr(nominal, [goodvars[k]])[1] / systuncert for k in goodvars }
+
+  ordks = \
+    sorted \
+    ( fracuncerts.keys()
+    , key=lambda k: numpy.max(fracuncerts[k])
+    , reverse=True
+    )[:10]
+
+  fracuncerts = [ fracuncerts[k] for k in ordks ]
   sumuncert = numpy.sqrt(sum([frac*frac for frac in fracuncerts]))
 
   # print(totaluncert)
@@ -88,7 +99,7 @@ if __name__ == "__main__":
     ( plt
     , [ ( bincenters , binerrs ) ] * (1 + len(fracuncerts))
     , [ zeroerr(sumuncert) ] + [ zeroerr(u) for u in fracuncerts ]
-    , ["quadrature sum"] + uncerts
+    , ["quadrature sum"] + ordks
     , "jet $p_\\mathrm{T}$ [GeV]"
     , "included systematic uncertainty fraction"
     , alphas = [ 1.0 ] * (len(fracuncerts) + 1)
@@ -101,7 +112,9 @@ if __name__ == "__main__":
     #   + [ "black" ]
     )
 
+  plt.plot([0, 1000], [1, 1], lw=1, color="black", ls="--")
   plt.set_xscale("log")
+  plt.set_xlim(20, 400)
   plt.set_ylim(0, 1.5)
   plt.text(25, 1.4, "ATLAS", weight="bold", style="italic", size="large")
   plt.text(25, 1.33, "Internal", style="italic", size="large")
