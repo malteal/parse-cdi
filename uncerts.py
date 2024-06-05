@@ -59,7 +59,7 @@ if __name__ == "__main__":
     ( fracuncerts.keys()
     , key=lambda k: numpy.max(fracuncerts[k])
     , reverse=True
-    )[:10]
+    )[:15]
 
   fracuncerts = [ fracuncerts[k] for k in ordks ]
   sumuncert = numpy.sqrt(sum([frac*frac for frac in fracuncerts]))
