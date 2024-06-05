@@ -38,6 +38,8 @@ if __name__ == "__main__":
   cdi = sffile(s, 0).value
   nominal, vars = tohists(cdi)
   bins = numpy.array(binning(cdi))
+  xs = (bins[1:] + bins[:-1]) / 2.0
+  xerrs = (bins[1:] - bins[:-1]) / 2.0
 
   def app(h):
     return (1 + numpy.array(h))*nominal
@@ -45,19 +47,6 @@ if __name__ == "__main__":
   nominal = numpy.array(nominal)
 
   dvars = dictmap(app, vars)
-
-  # for whatever reason, numpy removes "-" from recarray key names...
-  uncerts = \
-    [ "Flavor_Composition"
-    , "Flavor_Response"
-    , "EtaIntercalibration_Modelling"
-    , "FT_EFF_ttbar_PowHW7"
-    , "ttbar_mc_rad"
-    , "Pileup_OffsetMu"
-    , "Pileup_RhoTopology"
-    , "JER_DataVsMC_MC16"
-    , "JER_EffectiveNP_1"
-    ]
 
 
   goodvars = { k : dvars[k] for k in dvars if "stat" not in k and "singletop" not in k }
@@ -74,15 +63,6 @@ if __name__ == "__main__":
 
   fracuncerts = [ fracuncerts[k] for k in ordks ]
   sumuncert = numpy.sqrt(sum([frac*frac for frac in fracuncerts]))
-
-  # print(totaluncert)
-  # print(fracuncerts); exit()
-
-
-  from maltesfs import csvsfs
-  otsfs = csvsfs[wp]
-  xs = otsfs["bins"]
-  xerrs = numpy.stack([otsfs["width"]]*2)
 
 
   bins = numpy.array(bins)
