@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://gitlab.cern.ch/atlas-ftag-calibration/inputs_CDI/-/blob/master/bjets/ttbar_pdf/btag_ttbarPDF_mc16ade_v1.0_21-2-93_DL1r_AntiKt4EMPFlowJets_BTagging201903_60.txt?ref_type=heads
+HostUrl=https://gitlab.cern.ch/atlas-ftag-calibration/inputs_CDI/-/raw/master/bjets/ttbar_pdf/btag_ttbarPDF_mc16ade_v1.0_21-2-93_DL1r_AntiKt4EMPFlowJets_BTagging201903_60.txt?ref_type=heads&inline=false

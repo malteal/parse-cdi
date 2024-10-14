@@ -20,13 +20,13 @@ sfs = \
 
 import numpy
 
-csvsfs = \
-  { k :
-    numpy.genfromtxt \
-    ( "MC_WP_%d_WP.csv" % k
-    , delimiter=","
-    , names=True
-    )
+# csvsfs = \
+#   { k :
+#     numpy.genfromtxt \
+#     ( "MC_WP_%d_WP.csv" % k
+#     , delimiter=","
+#     , names=True
+#     )
 
-    for k in [ 85 , 77 , 70 , 60 ]
-  }
+#     for k in [ 85 , 77 , 70 , 60 ]
+#   }
