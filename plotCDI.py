@@ -42,7 +42,7 @@ def tohists(xs):
 def dictmap(f, d):
   return { k : f(x) for k , x in d.items() }
 
-# MODEL_PATH = "/home/users/a/algren/scratch/trained_networks/ftag_calib/paper_runs/calibrations/ttbar/2024_06_03_22_49_18_190896_lights_z_plus_jet/plots/Flow_uniform/integral/dl1r_b/"
+# MODEL_PATH = "/home/users/a/algren/scratch/trained_networks/ftag_calib/paper_runs/calibrations/ttbar/2024_06_03_22_49_18_190896_lights_z_plus_jet/plots/Flow_uniform_all/integral/dl1r_b/"
 MODEL_PATH = "/home/users/a/algren/scratch/trained_networks/ftag_calib/paper_runs/calibrations/ttbar/2024_06_03_22_49_18_190896_lights_z_plus_jet/plots/Flow_all/integral/dl1r_b/"
 GLOB_PATH = "/home/users/a/algren/work/root_stuff/parse_cdi"
 if __name__ == "__main__":
@@ -202,4 +202,4 @@ if __name__ == "__main__":
                    frameon=False)
 
         fig.tight_layout()
-        fig.savefig(f"figs/{wp}WP{addition_name}.pdf")
+        # fig.savefig(f"figs/{wp}WP{addition_name}.pdf")
